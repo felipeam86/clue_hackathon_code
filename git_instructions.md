@@ -17,7 +17,7 @@ git add ...
 git commit -m "description of change"
 git push origin master
 
-The go to your github and make a merge request that Felix will accept of reject
+The go to your github and make a pull request (merge) that Felix will accept of reject
 
 ## Pull: always from felix repo
 Whenever new changes are pushed to the repo (from other team):
