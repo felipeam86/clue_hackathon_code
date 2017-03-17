@@ -1,30 +1,37 @@
-## Fork Felix' repo
-On Github, go to felix repo: https://github.com/aktivkohle/clue_hackathon_code
-Fork felix repo so you have a copy on your github (fork icon top right corner of the screen)
+## 1. Setup your repo
+- On Github, go to: https://github.com/felipeam86/clue_hackathon_code and
+fork the repo. The fork icon is on the top right corner of the screen
 
-## Clone your own version of felix' repo
-On your machine, create a local instance of the forked repo (from your github)
-e.g. 
+- Clone your own repo to your machine, e.g.,
 
-_git clone git@github.com:GregVial/clue_hackathon_code.git_
+```bash
+git clone git@github.com:GregVial/clue_hackathon_code.git
+```
 
-## Setup link between your local version and Felix (upstream)
-On your machine, create a link with Felix repo
-e.g. 
-_git remote add upstream git@github.com:aktivkohle/clue_hackathon_code.git_
+- On your machine, create a link with the central upstream repo:
 
-You are all set
+```bash
+git remote add upstream git@github.com:felipeam86/clue_hackathon_code.git
+```
 
-## Push: always to your github
-_ git add ..._ 
+To this point, your master should be pointing to your github fork and the
+upstream should be pointing to Felipe's version
 
-_git commit -m "description of change"_
+## 2. Workflow
 
-_git push origin master_
+- Push: always to your github
+```bash
+git add model.py data.py
+git commit -m "description of change"
+git push origin master
+```
 
-The go to your github and make a pull request (merge) that Felix will accept of reject
+- When you want to propose changes, go to your github and make a pull
+ request (merge) that will be discussed and accepted on Felipe's repo
 
-## Pull: always from felix repo
-Whenever new changes are pushed to the repo (from other team):
+- Refresh your repo with new contributions from the team by pulling from
+upstream
 
-_git pull upstream master_
+```bash
+git pull upstream master
+```
