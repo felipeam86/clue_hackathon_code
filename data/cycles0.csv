@@ -1,0 +1,2 @@
+user_id,cycle_id,cycle_start,expected_cycle_length
+EXAMPLE-USER_UUID,0,2015-06-01,30.5
