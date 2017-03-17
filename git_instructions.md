@@ -35,3 +35,5 @@ upstream
 ```bash
 git pull upstream master
 ```
+
+## Well done team!
