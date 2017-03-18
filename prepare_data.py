@@ -58,6 +58,15 @@ def transform_users(user_ids):
     )
 
 
+def get_sample_of_users(n, min_tracking_count=20):
+    symptom_tracking_count = tracking.user_id.value_counts()
+    interesting_users = symptom_tracking_count[symptom_tracking_count > min_tracking_count]
+
+    return list(
+        interesting_users.sample(n).index
+    )
+
+
 if __name__ == '__main__':
 
     import argparse
@@ -69,9 +78,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    symptom_tracking_count = tracking.user_id.value_counts()
-    symptom_tracking_count[symptom_tracking_count > 20]
-
-    sequence = transform_users(
-        list(symptom_tracking_count.sample(args.N_users).index)
-    )
+    sample_of_users = get_sample_of_users(args.N_users)
+    sequence = transform_users(sample_of_users)
