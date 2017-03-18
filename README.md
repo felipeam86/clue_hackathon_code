@@ -1,5 +1,5 @@
 
-<img src="the_simptoms.png" alt="the simptoms" style="width: 200px;">
+<img src="the_simptoms.png" alt="the simptoms" width="200">
 
 # Example submission for the hackathon
 
