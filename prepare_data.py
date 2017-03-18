@@ -42,10 +42,33 @@ def transform_user(user_id):
     out_sequence = np.zeros(
         (
             out.absolute_day.max(),
-            N_symptoms
+            N_symptoms + 1
         )
     )
-
+    out_sequence[:, -1] = range(1, out_sequence.shape[0] + 1)
     for _, row in out.iterrows():
         out_sequence[row['absolute_day'] - 1, row['symptom_code']] = 1
-    return out, out_sequence
+    return out_sequence
+
+
+def transform_users(user_ids):
+    return np.vstack(
+        [transform_user(user_id)
+         for user_id in user_ids]
+    )
+
+
+if __name__ == '__main__':
+
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        '-N_users', default=10, type=int,
+        help='How many users to sequence')
+
+    args = parser.parse_args()
+
+    sequence = transform_users(
+        users.user_id.sample(args.N_users)
+    )
