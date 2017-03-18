@@ -1,4 +1,4 @@
-!(the simptoms)[the_simptoms.png)
+![the simptoms](the_simptoms.png)
 
 # Example submission for the hackathon
 
