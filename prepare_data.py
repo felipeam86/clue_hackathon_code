@@ -69,6 +69,9 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    symptom_tracking_count = tracking.user_id.value_counts()
+    symptom_tracking_count[symptom_tracking_count > 20]
+
     sequence = transform_users(
-        users.user_id.sample(args.N_users)
+        list(symptom_tracking_count.sample(args.N_users).index)
     )
