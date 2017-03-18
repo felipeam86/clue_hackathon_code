@@ -1,3 +1,5 @@
+!(the simptoms)[the_simptoms.png)
+
 # Example submission for the hackathon
 
 This is an example submission in Python that you can use as reference/starting point to create your own submission.
