@@ -1,4 +1,5 @@
-![the simptoms](the_simptoms.png =250x)
+
+<img src="the_simptoms.png alt="the simptoms" style="width: 200px;">
 
 # Example submission for the hackathon
 
