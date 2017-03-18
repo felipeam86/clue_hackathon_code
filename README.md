@@ -1,4 +1,4 @@
-![the simptoms](the_simptoms.png)
+![the simptoms](the_simptoms.png =250x)
 
 # Example submission for the hackathon
 
