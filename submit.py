@@ -17,7 +17,7 @@ import sys
 
 input = raw_input  # remove in python3
 
-DEFAULT_COMPETITION_NAME = 'clue-demo'
+DEFAULT_COMPETITION_NAME = 'clue'
 BUILD_IMAGE_NAME = 'statice.tmp'
 EXPECTED_HEADERS = 'user_id,day_in_cycle,symptom,probability'
 REGISTRY_ADDR = 'statice.wattx.io:5000'
