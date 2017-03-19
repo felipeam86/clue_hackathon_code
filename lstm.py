@@ -16,7 +16,7 @@ from prepare_data import transform_users, transform_user, get_sample_of_users, s
 
 INPUT_SIZE = 16
 OUTPUT_SIZE = 16
-MAXLEN = 60
+MAXLEN = 90
 STEP_DAYS = 3
 BATCH_SIZE = 256
 NB_EPOCH = 15
