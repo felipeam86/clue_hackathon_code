@@ -275,4 +275,4 @@ if __name__ == '__main__':
     submission_df.columns = ['user_id', 'day_in_cycle', 'symptom', 'probability']
     submission_df["symptom"] = submission_df["symptom"].apply(lambda x: symptoms_of_interest_dict[x])
 
-    submission_df.to_csv("results.csv", index=False)
+    submission_df.to_csv("./result.txt", index=False)
