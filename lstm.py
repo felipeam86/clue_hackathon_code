@@ -17,7 +17,8 @@ MAXLEN = 60
 STEP_DAYS = 3
 BATCH_SIZE = 256
 NB_EPOCH = 15
-
+MODEL = 1
+WEIGHTS = "lstm_1_layer.hdf5"
 
 def reformat(df_in,
              input_size=INPUT_SIZE,
@@ -133,10 +134,6 @@ def get_model(model=1):
         model.add(Dense(OUTPUT_SIZE))
         model.add(Activation('sigmoid'))
 
-    model.compile(loss='binary_crossentropy',
-                  optimizer=adam(),
-                  metrics=['accuracy'])
-
     return model, filepath
 
 
@@ -202,19 +199,29 @@ if __name__ == '__main__':
     parser.add_argument('-fit', action='store_true',
                         help="If True, fit the model.")
 
+    parser.add_argument(
+    	'-model', default=MODEL, type=int,
+                        help="1 = 1 layer, 2 = 2 layers")
+
+    parser.add_argument(
+        '-weights', default=WEIGHTS, type=str,
+                        help="Use the submitted pre-trained model")
+
     args = parser.parse_args()
 
     INPUT_SIZE = args.input_size
     OUTPUT_SIZE = args.output_size
     MAXLEN = args.maxlen
     STEP_DAYS = args.step_days
+    MODEL = args.model
+    WEIGHTS = args.weights
 
     sample_of_users = get_sample_of_users(args.N_train + args.N_test)
 
     df_train = transform_users(sample_of_users[:args.N_train])
     df_test = transform_users(sample_of_users[-args.N_test:])
 
-    model, filepath = get_model(2)
+    model, filepath = get_model(MODEL)
 
     # Define callback to save model
     save_snapshots = ModelCheckpoint(filepath,
@@ -228,6 +235,7 @@ if __name__ == '__main__':
     X_test, y_test = reformat(df_test)
 
     if args.fit:
+        model.compile(loss='binary_crossentropy', optimizer=adam(), metrics=['accuracy'])
         train_history = model.fit(X_train,
                                   y_train,
                                   batch_size=args.batch_size,
@@ -239,6 +247,12 @@ if __name__ == '__main__':
         score = model.evaluate(X_test, y_test, verbose=2)
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
+    else:
+    	# load weights
+        model.load_weights(WEIGHTS)
+		# Compile model (required to make predictions)
+        model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+        print("Created model and loaded weights from file")
 
     submission = []
     j = 0
