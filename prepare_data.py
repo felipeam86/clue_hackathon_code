@@ -36,7 +36,8 @@ tracking['symptom_code'] = tracking.symptom.map(lambda s: ordered_symptoms[s])
 
 
 def transform_user(user_id):
-    out = tracking[tracking.user_id == user_id]
+    #out = tracking[tracking.user_id == user_id]
+    out = np.where(tracking.user_id == user_id)    
     out.loc[:, 'absolute_day'] = (out.date.dt.date - out.date.dt.date.min()).dt.days + 1
     out = pd.merge(out, cycles[cycles.user_id == user_id], on=["cycle_id", "user_id"])
 

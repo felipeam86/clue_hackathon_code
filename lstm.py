@@ -140,7 +140,7 @@ def get_model(model=1):
     return model, filepath
 
 
-def format_prediction(prediction, user_id):
+def format_prediction_slow(prediction, user_id):
     output = []
     prediction = pd.DataFrame(prediction)
     for i, row in prediction.iterrows():
@@ -149,9 +149,16 @@ def format_prediction(prediction, user_id):
             output.append(line)
     return output
 
+def format_prediction(prediction,user_id):
+    s = pd.melt(pd.DataFrame(prediction).reset_index(),id_vars="index")
+    s["index"] += 1
+    s.columns = ['day_in_cycle','symptom','probability']
+    user = pd.DataFrame([user_id for _ in range(s.shape[0])],columns=["user_id"])
+    output = pd.concat([user,s],axis=1)
+    return output
 
 def pad_reshape_history(sequence, maxlen, input_size):
-    if sequence.shape[0] < maxlen:
+    if sequence.shape[0] <= maxlen:
         hist = np.zeros((maxlen, sequence.shape[1]))
         hist[maxlen - sequence.shape[0]:, :] = sequence
     elif sequence.shape[0] == maxlen:
@@ -269,6 +276,9 @@ if __name__ == '__main__':
         res = generate_prediction(hist, model, maxlen=MAXLEN, input_size=INPUT_SIZE, output_size=OUTPUT_SIZE,
                                   days=expected_length)
         submission.append(format_prediction(res, current_id))
+#        j+=1
+#        if j > 45:
+#            break
 
     submission_df = pd.concat([pd.DataFrame(submission[i]) for i in range(len(submission))], ignore_index=True)
     submission_df.columns = ['user_id', 'day_in_cycle', 'symptom', 'probability']
