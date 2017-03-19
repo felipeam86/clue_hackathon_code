@@ -1,16 +1,15 @@
 from __future__ import print_function
-from keras.models import Sequential
-from keras.layers import Dense, Activation
-from keras.layers import LSTM, Dropout
-from keras.optimizers import RMSprop, adam
-from keras.utils.data_utils import get_file
-from keras.callbacks import History, ModelCheckpoint
+
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+from keras.callbacks import ModelCheckpoint
+from keras.layers import Dense, Activation
+from keras.layers import LSTM, Dropout
+from keras.models import Sequential
+from keras.optimizers import adam
 
 from prepare_data import transform_users, transform_user, get_sample_of_users, symptoms_of_interest_dict, cycles0
-
 
 INPUT_SIZE = 16
 OUTPUT_SIZE = 16
