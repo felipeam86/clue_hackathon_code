@@ -200,7 +200,7 @@ if __name__ == '__main__':
                         help="If True, fit the model.")
 
     parser.add_argument(
-    	'-model', default=MODEL, type=int,
+        '-model', default=MODEL, type=int,
                         help="1 = 1 layer, 2 = 2 layers")
 
     parser.add_argument(
@@ -248,9 +248,9 @@ if __name__ == '__main__':
         print('Test score:', score[0])
         print('Test accuracy:', score[1])
     else:
-    	# load weights
+        # load weights
         model.load_weights(WEIGHTS)
-		# Compile model (required to make predictions)
+        # Compile model (required to make predictions)
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
         print("Created model and loaded weights from file")
 
