@@ -29,6 +29,7 @@ symptoms_of_interest = [
 
 other_symptoms = set(tracking.symptom.unique()) - set(symptoms_of_interest)
 ordered_symptoms = {s:i for i, s in enumerate(symptoms_of_interest + list(other_symptoms))}
+symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
 N_symptoms = len(ordered_symptoms)
 
 tracking['symptom_code'] = tracking.symptom.map(lambda s: ordered_symptoms[s])

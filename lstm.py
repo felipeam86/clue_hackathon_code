@@ -9,15 +9,15 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from prepare_data import transform_users, get_sample_of_users
+from prepare_data import transform_users, transform_user, get_sample_of_users, symptoms_of_interest_dict, cycles0
 
 
 INPUT_SIZE = 16
 OUTPUT_SIZE = 16
 MAXLEN = 60
 STEP_DAYS = 3
-BATCH_SIZE = 512
-NB_EPOCH = 3
+BATCH_SIZE = 256
+NB_EPOCH = 15
 
 
 def reformat(df_in,
@@ -66,6 +66,7 @@ def plot_logs(history):
     ax2.plot(training_accuracy, label='train')
     ax2.set_title('Accuracy')
     ax2.legend(loc='lower right')
+    return f
 
 
 def sample(preds, temperature=1.0):
@@ -88,29 +89,28 @@ def generate_prediction(history,
                         days=28,
                         maxlen=MAXLEN,
                         input_size=INPUT_SIZE,
-                        output_size=OUTPUT_SIZE,
-                        diversity=1):
+                        output_size=OUTPUT_SIZE):
     """
     Generates as many days of prediction as requested
     Considers maxlen days of past history (must be aligned with model)
     """
-    generated = np.zeros((days,input_size))
-    if history.shape[1]>maxlen:
-        x = history[:,-61:-1,:input_size]
+    generated = np.zeros((days, output_size))
+    if history.shape[1] > maxlen:
+        x = history[:, -maxlen - 1:-1, :input_size]
     else:
-        x = history[:,:,:output_size]
-    #print(x.shape)
+        x = history[:, :, :input_size]
     for i in range(days):
-        #print("Day %d" % i)
         preds = model.predict(x, verbose=0)[0].reshape(output_size)
-        print(preds.shape)
-        #next_symptoms = sample(preds, diversity)
-        next_symptoms = preds
-        #print(next_symptoms)
+        generated[i, :] = preds
 
-        generated[i,:] = next_symptoms
-        x[:,:maxlen-1,:] = x[:,1:,:]
-        x[:,maxlen-1,:] = next_symptoms
+        if input_size > output_size:
+            res = np.zeros(input_size)
+            res[:output_size] = preds
+            preds = res
+
+        next_symptoms = preds
+        x[:, :maxlen - 1, :] = x[:, 1:, :]
+        x[:, maxlen - 1, :] = next_symptoms
 
     return generated
 
@@ -125,12 +125,12 @@ def get_model(model=1):
         model.add(Activation('sigmoid'))
 
     elif model == 2:
-        filepath = "lstm_2_layers.hdf5"
+        filepath = "lstm_2_layers_higher_dropout.hdf5"
         model = Sequential()
         model.add(LSTM(256, input_shape=(MAXLEN, INPUT_SIZE), return_sequences=True))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.5))
         model.add(LSTM(256))
-        model.add(Dropout(0.1))
+        model.add(Dropout(0.6))
         model.add(Dense(OUTPUT_SIZE))
         model.add(Activation('sigmoid'))
 
@@ -139,6 +139,28 @@ def get_model(model=1):
                   metrics=['accuracy'])
 
     return model, filepath
+
+
+def format_prediction(prediction, user_id):
+    output = []
+    prediction = pd.DataFrame(prediction)
+    for i, row in prediction.iterrows():
+        for j, symptom in enumerate(row):
+            line = [user_id, i + 1, j, prediction.ix[i, j]]
+            output.append(line)
+    return output
+
+
+def pad_reshape_history(sequence, maxlen, input_size):
+    if sequence.shape[0] < maxlen:
+        hist = np.zeros((maxlen, sequence.shape[1]))
+        hist[maxlen - sequence.shape[0]:, :] = sequence
+    else:
+        hist = sequence[-maxlen - 1:-1, :]
+    if sequence.shape[1] > input_size:
+        hist = hist[:, :input_size]
+    hist = hist.reshape(1, maxlen, -1)
+    return hist
 
 
 if __name__ == '__main__':
@@ -154,9 +176,87 @@ if __name__ == '__main__':
         '-N_test', default=10, type=int,
         help='Number of users for testing raining dataset')
 
+    parser.add_argument(
+        '-N_epochs', default=NB_EPOCH, type=int,
+        help='Number of epochs')
+
+    parser.add_argument(
+        '-batch_size', default=BATCH_SIZE, type=int,
+        help='Batch size')
+
+    parser.add_argument(
+        '-input_size', default=INPUT_SIZE, type=int,
+        help='Input size')
+
+    parser.add_argument(
+        '-output_size', default=OUTPUT_SIZE, type=int,
+        help='Output size')
+
+    parser.add_argument(
+        '-maxlen', default=MAXLEN, type=int,
+        help='maxlen')
+
+    parser.add_argument(
+        '-step_days', default=STEP_DAYS, type=int,
+        help='STEP_DAYS')
+
+    parser.add_argument('-fit', action='store_true',
+                        help="If True, fit the model.")
+
     args = parser.parse_args()
+
+    INPUT_SIZE = args.input_size
+    OUTPUT_SIZE = args.output_size
+    MAXLEN = args.maxlen
+    STEP_DAYS = args.step_days
 
     sample_of_users = get_sample_of_users(args.N_train + args.N_test)
 
     df_train = transform_users(sample_of_users[:args.N_train])
     df_test = transform_users(sample_of_users[-args.N_test:])
+
+    model, filepath = get_model(2)
+
+    # Define callback to save model
+    save_snapshots = ModelCheckpoint(filepath,
+                                     monitor='loss',
+                                     save_best_only=True,
+                                     save_weights_only=True,
+                                     mode='min',
+                                     verbose=0)
+
+    X_train, y_train = reformat(df_train)
+    X_test, y_test = reformat(df_test)
+
+    if args.fit:
+        train_history = model.fit(X_train,
+                                  y_train,
+                                  batch_size=args.batch_size,
+                                  nb_epoch=args.N_epochs,
+                                  validation_data=(X_test, y_test),
+                                  callbacks=[save_snapshots],
+                                  verbose=1)
+
+        score = model.evaluate(X_test, y_test, verbose=2)
+        print('Test score:', score[0])
+        print('Test accuracy:', score[1])
+
+    submission = []
+    j = 0
+    for index, woman in cycles0.iterrows():
+        current_id = woman.user_id
+        expected_length = int(np.ceil(woman.expected_cycle_length))
+        sequence = transform_user(current_id)
+        hist = pad_reshape_history(sequence, MAXLEN, INPUT_SIZE)
+        res = generate_prediction(hist, model, maxlen=MAXLEN, input_size=INPUT_SIZE, output_size=OUTPUT_SIZE,
+                                  days=expected_length)
+        submission.append(format_prediction(res, current_id))
+        j += 1
+        if j > 2:
+            break
+
+    submission_df = pd.concat([pd.DataFrame(submission[i]) for i in range(len(submission))], ignore_index=True)
+    submission_df.columns = ['user_id', 'day_in_cycle', 'symptom', 'probability']
+    submission_df["symptom"] = submission_df["symptom"].apply(lambda x: symptoms_of_interest_dict[x])
+
+    submission_df.to_csv("results.csv", index=False)
