@@ -1,6 +1,9 @@
 from __future__ import print_function
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except:
+    pass
 import numpy as np
 import pandas as pd
 from keras.callbacks import ModelCheckpoint
