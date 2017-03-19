@@ -7,7 +7,7 @@ base_dir = os.path.dirname(__file__)
 data_dir = pj(base_dir, 'data')
 
 # ====================== Import data ======================
-active_days = pd.read_csv(pj(data_dir, 'active_days.csv'))
+active_days = pd.read_csv(pj(data_dir, 'active_days.csv'), parse_dates=['date'])
 users = pd.read_csv(pj(data_dir, 'users.csv'))
 
 cycles = pd.read_csv(pj(data_dir, 'cycles.csv'), parse_dates=['cycle_start'])
@@ -29,6 +29,7 @@ symptoms_of_interest = [
 
 other_symptoms = set(tracking.symptom.unique()) - set(symptoms_of_interest)
 ordered_symptoms = {s:i for i, s in enumerate(symptoms_of_interest + list(other_symptoms))}
+symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
 N_symptoms = len(ordered_symptoms)
 
 tracking['symptom_code'] = tracking.symptom.map(lambda s: ordered_symptoms[s])
@@ -58,6 +59,15 @@ def transform_users(user_ids):
     )
 
 
+def get_sample_of_users(n, min_tracking_count=20):
+    symptom_tracking_count = tracking.user_id.value_counts()
+    interesting_users = symptom_tracking_count[symptom_tracking_count > min_tracking_count]
+
+    return list(
+        interesting_users.sample(n).index
+    )
+
+
 if __name__ == '__main__':
 
     import argparse
@@ -69,9 +79,5 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    symptom_tracking_count = tracking.user_id.value_counts()
-    symptom_tracking_count[symptom_tracking_count > 20]
-
-    sequence = transform_users(
-        list(symptom_tracking_count.sample(args.N_users).index)
-    )
+    sample_of_users = get_sample_of_users(args.N_users)
+    sequence = transform_users(sample_of_users)
