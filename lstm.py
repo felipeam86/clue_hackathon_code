@@ -154,6 +154,8 @@ def pad_reshape_history(sequence, maxlen, input_size):
     if sequence.shape[0] < maxlen:
         hist = np.zeros((maxlen, sequence.shape[1]))
         hist[maxlen - sequence.shape[0]:, :] = sequence
+    elif sequence.shape[0] == maxlen:
+        hist = sequence
     else:
         hist = sequence[-maxlen - 1:-1, :]
     if sequence.shape[1] > input_size:
