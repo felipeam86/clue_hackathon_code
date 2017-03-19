@@ -267,9 +267,6 @@ if __name__ == '__main__':
         res = generate_prediction(hist, model, maxlen=MAXLEN, input_size=INPUT_SIZE, output_size=OUTPUT_SIZE,
                                   days=expected_length)
         submission.append(format_prediction(res, current_id))
-        j += 1
-        if j > 2:
-            break
 
     submission_df = pd.concat([pd.DataFrame(submission[i]) for i in range(len(submission))], ignore_index=True)
     submission_df.columns = ['user_id', 'day_in_cycle', 'symptom', 'probability']
