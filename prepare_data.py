@@ -7,7 +7,7 @@ base_dir = os.path.dirname(__file__)
 data_dir = pj(base_dir, 'data')
 
 # ====================== Import data ======================
-active_days = pd.read_csv(pj(data_dir, 'active_days.csv'))
+active_days = pd.read_csv(pj(data_dir, 'active_days.csv'), parse_dates=['date'])
 users = pd.read_csv(pj(data_dir, 'users.csv'))
 
 cycles = pd.read_csv(pj(data_dir, 'cycles.csv'), parse_dates=['cycle_start'])
