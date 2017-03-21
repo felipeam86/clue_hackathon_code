@@ -27,8 +27,9 @@ symptoms_of_interest = [
     'acne_skin', 'good_skin', 'oily_skin', 'dry_skin'
 ]
 
-other_symptoms = set(tracking.symptom.unique()) - set(symptoms_of_interest)
-ordered_symptoms = {s:i for i, s in enumerate(symptoms_of_interest + list(other_symptoms))}
+other_symptoms = list(set(tracking.symptom.unique()) - set(symptoms_of_interest))
+list_of_symptoms = symptoms_of_interest + other_symptoms
+ordered_symptoms = {s: i for i, s in enumerate(list_of_symptoms)}
 symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
 N_symptoms = len(ordered_symptoms)
 
