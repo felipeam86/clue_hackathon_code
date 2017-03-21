@@ -59,6 +59,8 @@ def generate_prediction(history,
     Generates as many days of prediction as requested
     Considers maxlen days of past history (must be aligned with model)
     """
+    print("Generating for expected cycle length %d" % days)
+ 
     generated = np.zeros((history.shape[0],days,output_size))
     x = history
     for i in range(days):
@@ -119,7 +121,7 @@ def get_submission():
         expected_length = int(np.ceil(expected_length))
 
         res = generate_prediction(women_to_predict,model, maxlen=MAXLEN,input_size=INPUT_SIZE,output_size=OUTPUT_SIZE,days=expected_length)
-        print(res.shape)
+        #print(res.shape)
         formatted_submission = format_prediction(res.reshape(-1,16),OUTPUT_SIZE,women,expected_length)
         submission = pd.concat([submission,formatted_submission])
 
@@ -130,9 +132,8 @@ def format_prediction(  prediction,
                         women,
                         expected_cycle_length):
 
-    expected_lengths = expected_cycle_length * output_size
-    print("Formatting for expected cycle length %d" % (expected_lengths/output_size))
-    user = pd.Series(np.repeat(women,expected_lengths),name="user_id")
+    print("Formatting for expected cycle length %d" % expected_cycle_length)
+    user = pd.Series(list(np.repeat(women,expected_cycle_length))*output_size,name="user_id")
     day_in_cycle = list(range(1,expected_cycle_length+1)) * (len(women)*output_size)
     
     s = pd.melt(pd.DataFrame(prediction).reset_index(),id_vars="index")
@@ -243,4 +244,4 @@ if __name__ == '__main__':
     sequence = load_sequence()
     submission_df = get_submission()
 
-    submission_df.to_csv("./result.csv", index=False)
+    submission_df.to_csv("./result.txt", index=False)

@@ -60,7 +60,7 @@ def transform_users(user_ids):
     )
 
 def load_sequence():
-    print("Attempting to load users data")
+    print("Loading users data")
     out = tracking[["user_id","cycle_id","date","day_in_cycle","symptom"]]
     out.set_index("user_id",inplace=True)
     out.index.name = None
@@ -76,7 +76,7 @@ def load_sequence():
     out2.reset_index(inplace=True)
     out2.columns = ["user_id","cycle_id","date","day_in_cycle","symptom_code","min_date","max_date","absolute_day"]
     
-    print("Attempting to reformat data")
+    print("Reformatting users data")
     pivot = pd.pivot_table(out2,
                             index=["user_id","date"],#,"cycle_id","day_in_cycle"],
                             columns="symptom_code",
@@ -135,7 +135,7 @@ def transform_users(user_ids):
         [transform_user(user_id)
          for user_id in user_ids]
     )
-    
+
 def get_sample_of_users(n, min_tracking_count=20):
     symptom_tracking_count = tracking.user_id.value_counts()
     interesting_users = symptom_tracking_count[symptom_tracking_count > min_tracking_count]
