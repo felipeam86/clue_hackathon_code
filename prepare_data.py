@@ -81,5 +81,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    sample_of_users = get_sample_of_users(args.N_users)
-    sequence = transform_users(sample_of_users)
+    if args.N_users > 0:
+        sample_of_users = get_sample_of_users(args.N_users)
+        sequence = transform_users(sample_of_users)
