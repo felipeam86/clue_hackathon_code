@@ -81,7 +81,7 @@ def generate_prediction(history,
         x[:,:maxlen-1,:] = x[:,1:,:]
         x[:,maxlen-1,:] = next_symptoms
 
-        return generated
+    return generated
 
 
 def get_model(model=1):
