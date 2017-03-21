@@ -70,6 +70,25 @@ def get_sample_of_users(n, min_tracking_count=20):
     )
 
 
+def expand_cycle(cycle):
+    dates = pd.date_range(start=cycle.cycle_start, periods=cycle.cycle_length).tolist()
+    period = np.zeros(cycle.cycle_length, dtype=np.int8)
+    period[:cycle.period_length] = 1
+    day_in_cycle = np.arange(1, cycle.cycle_length + 1, dtype=np.int8)
+
+    index = pd.MultiIndex.from_tuples(
+        tuples=list(zip([cycle.user_id] * int(cycle.cycle_length), dates)),
+        # [(cycle.user_id, cycle.cycle_id)] * int(cycle.cycle_length),
+        names=["user_id", "date"]
+    )
+
+    return pd.DataFrame(
+        data=list(zip([cycle.cycle_id] * int(cycle.cycle_length), day_in_cycle, period)),
+        index=index,
+        columns=['cycle_id', 'day_in_cycle', 'period']
+    )
+
+
 if __name__ == '__main__':
 
     import argparse
