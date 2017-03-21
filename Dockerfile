@@ -1,6 +1,6 @@
 FROM continuumio/anaconda3
 
-RUN pip install pandas keras tensorflow numpy
+RUN pip install pandas keras tensorflow numpy joblib
 
 ADD . /
 
