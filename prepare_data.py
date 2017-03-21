@@ -122,8 +122,8 @@ def get_training_data(split=True, force=False):
         # Do a train/test split of the data
         train_users = users.user_id.sample(frac=0.8)
         training = training.reset_index()
-        df_train = training[training.user_id.isin(train_users)]
-        df_test = training[~training.user_id.isin(train_users)]
+        df_train = training[training.user_id.isin(train_users)][training_columns]
+        df_test = training[~training.user_id.isin(train_users)][training_columns]
         return df_train, df_test
     else:
         return training
