@@ -134,8 +134,8 @@ if __name__ == '__main__':
 
     cycles_predict = pd.read_csv(pj(data_dir, 'cycles0.csv'), parse_dates=['cycle_start'])
 
-    X_predict = prepare_data_for_prediction(args.maxlen)
-    submission_df = get_submission(model, X_predict, cycles_predict.sample(10),
+    X_predict = prepare_data_for_prediction(maxlen=args.maxlen)
+    submission_df = get_submission(model, X_predict, cycles_predict,
                                    args.input_size, args.output_size, args.maxlen)
 
     submission_df.to_csv("./result.txt", index=False)
