@@ -64,7 +64,7 @@ def expand_cycles(cycles):
         cycles_processed = joblib.load(cycles_processed_backup)
     except:
         cycles_processed = pd.concat([expand_cycle(cycle) for _, cycle in cycles.iterrows()])
-        joblib.dump(cycles_processed_backup)
+        joblib.dump(cycles_processed, cycles_processed_backup)
 
     return cycles_processed
 
