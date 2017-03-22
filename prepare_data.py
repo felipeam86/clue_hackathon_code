@@ -56,11 +56,12 @@ def expand_cycle(cycle):
 
 
 def expand_cycles(cycles):
+    cycles_processed_backup = pj(data_dir, "cycles_processed.pkl.gz")
     try:
-        cycles_processed = joblib.load("../data/cycles_processed.pkl.gz")
+        cycles_processed = joblib.load(cycles_processed_backup)
     except:
         cycles_processed = pd.concat([expand_cycle(cycle) for _, cycle in cycles.iterrows()])
-        joblib.dump(cycles_processed, "../data/cycles_processed.pkl.gz")
+        joblib.dump(cycles_processed_backup)
 
     return cycles_processed
 
@@ -78,7 +79,7 @@ def process_tracking(tracking):
 
 def get_training_data(split=True, force=False):
 
-    training_backup = "../data/training.pkl.gz"
+    training_backup = pj(data_dir, 'training.pkl.gz')
 
     # Try to load from memory if already computed
     if os.path.exists(training_backup) and not force:
