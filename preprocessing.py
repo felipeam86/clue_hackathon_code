@@ -26,13 +26,32 @@ tracking_test = pd.read_csv(pj(data_dir, 'labels.csv'))
 
 # =============  Symptoms on the correct order ============
 symptoms_of_interest = [
-    'happy', 'pms', 'sad', 'sensitive_emotion',
-    'energized', 'exhausted', 'high_energy', 'low_energy',
-    'cramps', 'headache', 'ovulation_pain', 'tender_breasts',
-    'acne_skin', 'good_skin', 'oily_skin', 'dry_skin'
+    'happy', 'pms', 'sad', 'sensitive_emotion',  # emotion
+    'energized', 'exhausted', 'high_energy', 'low_energy',  # energy
+    'cramps', 'headache', 'ovulation_pain', 'tender_breasts',  # pain
+    'acne_skin', 'good_skin', 'oily_skin', 'dry_skin'  # skin
 ]
 
-other_symptoms = list(set(tracking.symptom.unique()) - set(symptoms_of_interest))
+other_symptoms = [
+    'fever_ailment', 'injury_ailment', 'cold_flu_ailment', 'allergy_ailment',  # ailment
+    'vacation_appointment', 'doctor_appointment', 'date_appointment', 'ob_gyn_appointment',  # appointment
+    'salty_craving', 'carbs_craving', 'sweet_craving', 'chocolate_craving',  # craving
+    'bloated', 'nauseated', 'great_digestion', 'gassy',  # digestion
+    'running', 'biking', 'yoga', 'swimming',  # exercise
+    'atypical', 'egg_white', 'sticky', 'creamy',  # fluid
+    'oily_hair', 'dry_hair', 'bad_hair', 'good_hair',  # hair
+    'antibiotic_medication', 'cold_flu_medication', 'pain_medication', 'antihistamine_medication',  # medication
+    'meditation',  # meditation
+    'focused', 'calm', 'stressed', 'distracted',  # mental
+    'motivated', 'unproductive', 'unmotivated', 'productive',  # motivation
+    'hangover', 'cigarettes', 'big_night_party', 'drinks_party',  # party
+    'constipated', 'normal_poop', 'diarrhea', 'great_poop',  # poop
+    'withdrawal_sex', 'unprotected_sex', 'protected_sex', 'high_sex_drive',  # sex
+    '3-6', '6-9', '0-3', '>9',  # sleep
+    'conflict_social', 'supportive_social', 'sociable', 'withdrawn_social',  # social
+    'ovulation_test_neg', 'ovulation_test_pos', 'pregnancy_test_neg', 'pregnancy_test_pos',  # test
+]
+
 list_of_symptoms = symptoms_of_interest + other_symptoms
 ordered_symptoms = {s: i for i, s in enumerate(list_of_symptoms)}
 symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
