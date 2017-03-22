@@ -133,3 +133,42 @@ def get_training_data(split=True, force=False):
         return df_train, df_test
     else:
         return training
+
+
+# =========== Prepare data for model predictions ==========
+def prepare_data_for_prediction(training, maxlen):
+    """Clip the training dataset to maxlen days per user
+
+    The LSTM predictor uses only the last maxlen days per user for predicting.
+    """
+
+    def get_user_daterange_index(user_id, max_date, length):
+        """Return a list of tuples with [user_id] x list of 'length' last days.
+
+        The list of tuples will be used to reconstruct an index with only the
+        the previous 90 dates per user
+        """
+        dates = pd.date_range(end=max_date, periods=length)
+        return list(zip([user_id] * len(dates), dates))
+
+    # Look up for the last day of activity per user
+    cycles_processed = expand_cycles(cycles)
+    day_maxs = cycles_processed.reset_index() \
+        .groupby("user_id") \
+        .agg({
+        'date': {'max_date': 'max'}
+    })['date']
+
+    # Get dates for all users
+    index_tuples = []
+    for user_id, max_date in day_maxs.iterrows():
+        index_tuples.extend(get_user_daterange_index(user_id, max_date.iloc[0], maxlen))
+
+    # Construct the index with the last dates per user
+    index = pd.MultiIndex.from_tuples(
+        tuples=index_tuples,
+        names=["user_id", "date"]
+    )
+
+    # Reindex and fill with 0 for women with less than 'maxlen' days of activity
+    return training.reindex(index, fill_value=0)
