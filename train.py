@@ -108,7 +108,7 @@ if __name__ == '__main__':
                               max_sequences=args.N_test)
     del df_test
 
-    model = get_model(args.model)
+    model = get_model(args.model, args.input_size, args.output_size, args.maxlen)
     model.compile(loss='binary_crossentropy', optimizer=adam(), metrics=['accuracy'])
 
     # Define callback to save model

@@ -123,7 +123,7 @@ if __name__ == '__main__':
     else:
         weights_backup = args.weights
 
-    model = get_model(args.model)
+    model = get_model(args.model, args.input_size, args.output_size, args.maxlen)
 
     # load weights
     model.load_weights(weights_backup)
