@@ -7,8 +7,7 @@ import numpy as np
 import pandas as pd
 
 from model import get_model
-from preprocessing import symptoms_of_interest_dict, data_dir
-from prepare_data_fast import load_sequence
+from preprocessing import symptoms_of_interest_dict, data_dir, prepare_data_for_prediction
 
 # ====================== Default values ======================
 INPUT_SIZE = 16
@@ -136,8 +135,8 @@ if __name__ == '__main__':
 
     cycles_predict = pd.read_csv(pj(data_dir, 'cycles0.csv'), parse_dates=['cycle_start'])
 
-    sequence = load_sequence()
-    submission_df = get_submission(model, sequence, cycles_predict.sample(10),
+    X_predict = prepare_data_for_prediction(args.maxlen)
+    submission_df = get_submission(model, X_predict, cycles_predict.sample(10),
                                    args.input_size, args.output_size, args.maxlen)
 
     submission_df.to_csv("./result.txt", index=False)
