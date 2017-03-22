@@ -136,7 +136,7 @@ def get_training_data(split=True, force=False):
 
 
 # =========== Prepare data for model predictions ==========
-def prepare_data_for_prediction(training, maxlen):
+def prepare_data_for_prediction(training=None, maxlen=90):
     """Clip the training dataset to maxlen days per user
 
     The LSTM predictor uses only the last maxlen days per user for predicting.
@@ -150,6 +150,9 @@ def prepare_data_for_prediction(training, maxlen):
         """
         dates = pd.date_range(end=max_date, periods=length)
         return list(zip([user_id] * len(dates), dates))
+
+    if training is None:
+        training = get_training_data(split=False)
 
     # Look up for the last day of activity per user
     cycles_processed = expand_cycles(cycles)
