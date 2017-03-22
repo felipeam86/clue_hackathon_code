@@ -1,8 +1,12 @@
-from os.path import join as pj
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
+from os.path import join as pj
+
 import joblib
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 base_dir = os.path.dirname(__file__)
 data_dir = pj(base_dir, 'data')
@@ -12,7 +16,7 @@ active_days = pd.read_csv(pj(data_dir, 'active_days.csv'), parse_dates=['date'])
 users = pd.read_csv(pj(data_dir, 'users.csv'))
 
 cycles = pd.read_csv(pj(data_dir, 'cycles.csv'), parse_dates=['cycle_start'])
-cycles0 = pd.read_csv(pj(data_dir, 'cycles0.csv'), parse_dates=['cycle_start'])
+cycles_predict = pd.read_csv(pj(data_dir, 'cycles0.csv'), parse_dates=['cycle_start'])
 
 # Train on this
 tracking = pd.read_csv(pj(data_dir, 'tracking.csv'), parse_dates=['date'])
@@ -20,7 +24,7 @@ tracking = pd.read_csv(pj(data_dir, 'tracking.csv'), parse_dates=['date'])
 tracking_test = pd.read_csv(pj(data_dir, 'labels.csv'))
 
 
-# ================  Feature engineer a user ================
+# =============  Symptoms on the correct order ============
 symptoms_of_interest = [
     'happy', 'pms', 'sad', 'sensitive_emotion',
     'energized', 'exhausted', 'high_energy', 'low_energy',
@@ -32,10 +36,10 @@ other_symptoms = list(set(tracking.symptom.unique()) - set(symptoms_of_interest)
 list_of_symptoms = symptoms_of_interest + other_symptoms
 ordered_symptoms = {s: i for i, s in enumerate(list_of_symptoms)}
 symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
-N_symptoms = len(ordered_symptoms)
 training_columns = list_of_symptoms + ['day_in_cycle', 'absolute_day', 'period']
 
 
+# ============  Feature engineer for the cycle ============
 def expand_cycle(cycle):
     dates = pd.date_range(start=cycle.cycle_start, periods=cycle.cycle_length).tolist()
     period = np.zeros(cycle.cycle_length, dtype=np.int8)
@@ -44,7 +48,6 @@ def expand_cycle(cycle):
 
     index = pd.MultiIndex.from_tuples(
         tuples=list(zip([cycle.user_id] * int(cycle.cycle_length), dates)),
-        # [(cycle.user_id, cycle.cycle_id)] * int(cycle.cycle_length),
         names=["user_id", "date"]
     )
 
@@ -66,6 +69,7 @@ def expand_cycles(cycles):
     return cycles_processed
 
 
+# ========  Feature engineer for tracked symptoms =========
 def process_tracking(tracking):
     # One hot encode the symptoms
     tracking_processed = pd.get_dummies(
@@ -77,6 +81,7 @@ def process_tracking(tracking):
     return tracking_processed.groupby(['user_id', 'date']).sum()[list_of_symptoms]
 
 
+# ===============  Merging all the features ===============
 def get_training_data(split=True, force=False):
 
     training_backup = pj(data_dir, 'training.pkl.gz')
@@ -128,15 +133,3 @@ def get_training_data(split=True, force=False):
         return df_train, df_test
     else:
         return training
-
-
-if __name__ == '__main__':
-
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '-N_users', default=10, type=int,
-        help='How many users to sequence')
-
-    args = parser.parse_args()

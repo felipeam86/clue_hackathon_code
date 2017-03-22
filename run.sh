@@ -1,3 +1,4 @@
 #!/bin/bash
 echo "starting"
-python3 /lstm.py -N_train 1 -N_test 1 -N_epochs 1 -fit
+python3 /train.py -model 1 -weights weights/lstm_1_layer.hdf5
+python3 /predict.py -model 1 -weights weights/lstm_1_layer.hdf5
