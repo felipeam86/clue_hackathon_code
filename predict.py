@@ -34,9 +34,9 @@ def generate_prediction(history,
     x = history
 
     if input_size > output_size:
-        res = np.zeros(input_size)
+        res = np.zeros((history.shape[0],1,input_size))
         non_symptoms = np.zeros((history.shape[0], 1, 3))
-        non_symptoms[:, :, 0:2] = history[:, history.shape[1], -5:-3] + 1
+        non_symptoms[:, :, 0:2] = history[:, -1:, 81:83] + 1
         non_symptoms[:, :, 2] = 1
         # non_symptoms[:,:,3:5] = history[:,history.shape[1],-2:0]
 
@@ -45,18 +45,18 @@ def generate_prediction(history,
         generated[:, i, :] = preds
 
         if input_size > output_size:
-            res[:output_size] = preds
-            res[:, i, -3:] = non_symptoms
+            res[:,:,:output_size] = preds
+            res[:,:,-3:] = non_symptoms
             non_symptoms[:, :, 0:2] += 1
             if i > 3:
-                non_symptoms[:, :, 3] = 0
+                non_symptoms[:, :, 2] = 0
             preds = res
 
         # next_symptoms = sample(preds, diversity)
         next_symptoms = preds
 
-        x[:, :maxlen - 1, :] = x[:, 1:, :]
-        x[:, maxlen - 1, :] = next_symptoms
+        x[:, :maxlen -1, :] = x[:, 1:, :]
+        x[:, -1: , :] = next_symptoms
 
     return generated
 
