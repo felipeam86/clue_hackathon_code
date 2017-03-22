@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
     # Define callback to save model
     save_snapshots = ModelCheckpoint(weights_backup,
-                                     monitor='loss',
+                                     monitor='val_loss',
                                      save_best_only=True,
                                      save_weights_only=True,
                                      mode='min',
