@@ -1,8 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+from os.path import join as pj
+
 from keras.layers import LSTM, Dense, Activation, Dropout
 from keras.models import Sequential
+
+
+base_dir = os.path.dirname(__file__)
+weights_dir = pj(base_dir, 'weights')
 
 
 def get_model(model=1, input_size=16, output_size=16, maxlen=90):
@@ -23,3 +30,8 @@ def get_model(model=1, input_size=16, output_size=16, maxlen=90):
         model.add(Activation('sigmoid'))
 
     return model
+
+
+def get_weight_path(model, input_size, output_size, maxlen):
+    template = "lstm_{}_layers_{}_input_size_{}_output_size_{}_maxlen.hdf5"
+    return pj(weights_dir, template.format(model, input_size, output_size, maxlen))

@@ -1,18 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os
-from os.path import join as pj
-
 import joblib
 import numpy as np
 from keras.callbacks import ModelCheckpoint
 from keras.optimizers import adam
 
-from model import get_model
-
-base_dir = os.path.dirname(__file__)
-weights_dir = pj(base_dir, 'weights')
+from model import get_model, get_weight_path
 
 # ====================== Default values ======================
 INPUT_SIZE = 16
@@ -22,8 +16,6 @@ STEP_DAYS = 3
 BATCH_SIZE = 256
 NB_EPOCH = 15
 MODEL = 1
-WEIGHTS_1 = pj(weights_dir, "lstm_1_layer.hdf5")
-WEIGHTS_2 = pj(weights_dir, "lstm_2_layers_higher_dropout.hdf5")
 N_TRAIN = 100000
 N_TEST = 50000
 # ============================================================
@@ -79,10 +71,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.weights is None:
-        if args.model == 1:
-            weights_backup = WEIGHTS_1
-        elif args.model == 2:
-            weights_backup = WEIGHTS_2
+        weights_backup = get_weight_path(args.model, args.input_size, args.output_size, args.maxlen)
     else:
         weights_backup = args.weights
 

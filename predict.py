@@ -6,9 +6,8 @@ from os.path import join as pj
 import numpy as np
 import pandas as pd
 
-from model import get_model
+from model import get_model, get_weight_path
 from preprocessing import symptoms_of_interest_dict, data_dir, prepare_data_for_prediction
-from train import WEIGHTS_1, WEIGHTS_2
 
 # ====================== Default values ======================
 INPUT_SIZE = 16
@@ -116,10 +115,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.weights is None:
-        if args.model == 1:
-            weights_backup = WEIGHTS_1
-        elif args.model == 2:
-            weights_backup = WEIGHTS_2
+        weights_backup = get_weight_path(args.model, args.input_size, args.output_size, args.maxlen)
     else:
         weights_backup = args.weights
 
