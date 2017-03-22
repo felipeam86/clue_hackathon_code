@@ -8,14 +8,13 @@ import pandas as pd
 
 from model import get_model
 from preprocessing import symptoms_of_interest_dict, data_dir, prepare_data_for_prediction
+from train import WEIGHTS_1, WEIGHTS_2
 
 # ====================== Default values ======================
 INPUT_SIZE = 16
 OUTPUT_SIZE = 16
 MAXLEN = 90
 MODEL = 1
-WEIGHTS_1 = "weights/lstm_1_layer.hdf5"
-WEIGHTS_2 = "weights/lstm_2_layers_higher_dropout.hdf5"
 # ============================================================
 
 
