@@ -101,13 +101,13 @@ def process_tracking(tracking):
 
 
 # ===============  Merging all the features ===============
-def get_training_data(split=True, force=False):
+def get_features(split=True, force=False):
 
-    training_backup = pj(data_dir, 'training.pkl.gz')
+    features_backup = pj(data_dir, 'features.pkl.gz')
 
     # Try to load from memory if already computed
-    if os.path.exists(training_backup) and not force:
-        training = joblib.load(training_backup)
+    if os.path.exists(features_backup) and not force:
+        features = joblib.load(features_backup)
     else:
         # Expand cycles so that there is a line per date (active or not) with a boolean indicator of period
         cycles_processed = expand_cycles(cycles)
@@ -116,11 +116,11 @@ def get_training_data(split=True, force=False):
         tracking_processed = process_tracking(tracking)
 
         # Merge cycles and tracking information
-        training = pd.merge(cycles_processed, tracking_processed, left_index=True, right_index=True, how='outer').fillna(0)
+        features = pd.merge(cycles_processed, tracking_processed, left_index=True, right_index=True, how='outer').fillna(0)
 
         # Find the first day the user started using the app
-        training = pd.merge(
-            training,
+        features = pd.merge(
+            features,
             cycles.groupby('user_id')\
                   .agg({'cycle_start': {'first_use': 'min'}})\
                   .reset_index()\
@@ -130,14 +130,14 @@ def get_training_data(split=True, force=False):
         )
 
         # Find the absolute day for each row from the day the user started using the app
-        absolute_day = (training.reset_index().date.dt.date - training.reset_index().first_use.dt.date).dt.days + 1
-        absolute_day.index = training.index
-        training['absolute_day'] = absolute_day
+        absolute_day = (features.reset_index().date.dt.date - features.reset_index().first_use.dt.date).dt.days + 1
+        absolute_day.index = features.index
+        features['absolute_day'] = absolute_day
         # Keep only the columns needed by the RNN
-        training = training[training_columns]
+        features = features[training_columns]
 
         # Make a copy to speed up development iterations
-        joblib.dump(training, training_backup)
+        joblib.dump(features, features_backup)
 
         # This saves memory, I think...
         del tracking_processed
@@ -146,16 +146,16 @@ def get_training_data(split=True, force=False):
     if split:
         # Do a train/test split of the data
         train_users = users.user_id.sample(frac=0.8)
-        training = training.reset_index()
-        df_train = training[training.user_id.isin(train_users)][training_columns]
-        df_test = training[~training.user_id.isin(train_users)][training_columns]
+        features = features.reset_index()
+        df_train = features[features.user_id.isin(train_users)][training_columns]
+        df_test = features[~features.user_id.isin(train_users)][training_columns]
         return df_train, df_test
     else:
-        return training
+        return features
 
 
 # =========== Prepare data for model predictions ==========
-def prepare_data_for_prediction(training=None, maxlen=90):
+def prepare_data_for_prediction(features=None, maxlen=90):
     """Clip the training dataset to maxlen days per user
 
     The LSTM predictor uses only the last maxlen days per user for predicting.
@@ -170,8 +170,8 @@ def prepare_data_for_prediction(training=None, maxlen=90):
         dates = pd.date_range(end=max_date, periods=length)
         return list(zip([user_id] * len(dates), dates))
 
-    if training is None:
-        training = get_training_data(split=False)
+    if features is None:
+        features = get_features(split=False)
 
     # Look up for the last day of activity per user
     cycles_processed = expand_cycles(cycles)
@@ -193,4 +193,4 @@ def prepare_data_for_prediction(training=None, maxlen=90):
     )
 
     # Reindex and fill with 0 for women with less than 'maxlen' days of activity
-    return training.reindex(index, fill_value=0)
+    return features.reindex(index, fill_value=0)

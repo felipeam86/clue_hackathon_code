@@ -90,8 +90,8 @@ if __name__ == '__main__':
         df_train = joblib.load('data/small_df_train.pkl.gz')
         df_test = joblib.load('data/small_df_test.pkl.gz')
     else:
-        from preprocessing import get_training_data
-        df_train, df_test = get_training_data(split=True)
+        from preprocessing import get_features
+        df_train, df_test = get_features(split=True)
 
     X_train, y_train = reformat(df_train,
                                 input_size=args.input_size,
