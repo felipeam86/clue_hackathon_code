@@ -10,6 +10,8 @@ import pandas as pd
 
 base_dir = os.path.dirname(__file__)
 data_dir = pj(base_dir, 'data')
+staging_dir = pj(base_dir, 'staging')
+os.makedirs(staging_dir, exist_ok=True)
 
 # ====================== Import data ======================
 active_days = pd.read_csv(pj(data_dir, 'active_days.csv'), parse_dates=['date'])
@@ -78,7 +80,7 @@ def expand_cycle(cycle):
 
 
 def expand_cycles(cycles):
-    cycles_processed_backup = pj(data_dir, "cycles_processed.pkl.gz")
+    cycles_processed_backup = pj(staging_dir, "cycles_processed.pkl.gz")
     try:
         cycles_processed = joblib.load(cycles_processed_backup)
     except:
@@ -103,7 +105,7 @@ def process_tracking(tracking):
 # ===============  Merging all the features ===============
 def get_features(split=True, force=False):
 
-    features_backup = pj(data_dir, 'features.pkl.gz')
+    features_backup = pj(staging_dir, 'features.pkl.gz')
 
     # Try to load from memory if already computed
     if os.path.exists(features_backup) and not force:
