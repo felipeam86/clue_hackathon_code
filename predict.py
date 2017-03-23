@@ -36,14 +36,14 @@ def generate_prediction(history,
     x = history.copy()
 
     # If input has more than the 16 symptoms to predict
-    # 	create a container res that will be used to pad the missing data
-    #	before submitting for next days predictions
+    # create a container res that will be used to pad the missing data
+    # before submitting for next days predictions
     if input_size > output_size:
-        res = np.zeros((history.shape[0],1,input_size))
+        res = np.zeros((history.shape[0], 1, input_size))
         non_symptoms = np.zeros((history.shape[0], 1, 3))
         non_symptoms[:, :, 0:2] = history[:, -1:, 81:83] + 1
         non_symptoms[:, :, 2] = 1
-        # non_symptoms[:,:,3:5] = history[:,history.shape[1],-2:0]
+    # non_symptoms[:,:,3:5] = history[:,history.shape[1],-2:0]
 
     # Generate predictions for each days in maxlen
     for i in range(days):
@@ -51,10 +51,10 @@ def generate_prediction(history,
         generated[:, i, :] = preds
 
         # If input has more than the 16 symptoms to predict
-        #	pad the missing data
+        # pad the missing data
         if input_size > output_size:
-            res[:,:,:output_size] = preds
-            res[:,:,-3:] = non_symptoms
+            res[:, :, :output_size] = preds
+            res[:, :, -3:] = non_symptoms
             non_symptoms[:, :, 0:2] += 1
             if i > 3:
                 non_symptoms[:, :, 2] = 0
@@ -64,9 +64,9 @@ def generate_prediction(history,
         next_symptoms = preds
 
         # remove the first day of history
-        x[:, :maxlen -1, :] = x[:, 1:, :]
+        x[:, :maxlen - 1, :] = x[:, 1:, :]
         # add the predicting data as last day of history
-        x[:, -1: , :] = next_symptoms
+        x[:, -1:, :] = next_symptoms
 
     return generated
 
@@ -75,7 +75,7 @@ def get_submission(model, sequence, cycles_predict,
                    input_size=INPUT_SIZE,
                    output_size=OUTPUT_SIZE,
                    maxlen=MAXLEN):
-	# Create empty data frame that will contain result
+    # Create empty data frame that will contain result
     submission = pd.DataFrame(columns=['user_id', 'day_in_cycle', 'symptom', 'probability'])
 
     # Create a list of all unique expected cycles length
@@ -83,7 +83,7 @@ def get_submission(model, sequence, cycles_predict,
 
     # Loop through each unique expected cycle length and predict/format
     for expected_length in expected_lengths:
-    	# Create user_id list of women with considered cycle length
+        # Create user_id list of women with considered cycle length
         women = list(cycles_predict[cycles_predict.expected_cycle_length == expected_length].user_id)
         # Create symtoms subset for all considered women and reshape it
         women_to_predict = sequence.loc[women]
