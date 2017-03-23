@@ -17,6 +17,7 @@ def get_model(model=1, input_size=16, output_size=16, maxlen=90):
     if model == 1:
         model = Sequential()
         model.add(LSTM(128, input_shape=(maxlen, input_size)))
+        model.add(Dropout(0.5))
         model.add(Dense(output_size))
         model.add(Activation('sigmoid'))
 

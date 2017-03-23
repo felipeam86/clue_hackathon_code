@@ -55,11 +55,13 @@ def reformat(df_in,
             days_sequence[j] = df.ix[day_i: day_i + maxlen - 1, :input_size]
             # Store the y
             next_day[j] = df.ix[day_i + maxlen, :output_size]
+            # Increment sequence counter
+            j += 1
         # move along the raw input by step_days
         day_i += step_days
         # Update counters
         last_day = days.ix[day_i]
-        j += 1
+
 
     # In case less sequence than the max have been created, shorted the outputs
     days_sequence = days_sequence[:j, :, :]
