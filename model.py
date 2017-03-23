@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+LSTM models used for predicting
+"""
+
 import os
 from os.path import join as pj
 

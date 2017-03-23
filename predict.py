@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Script used to predict with an already trained LSTM model
+"""
+
 from os.path import join as pj
 
 import numpy as np

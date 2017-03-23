@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Script used to train the LSTM model
+"""
+
 import joblib
 import numpy as np
 from keras.callbacks import ModelCheckpoint
