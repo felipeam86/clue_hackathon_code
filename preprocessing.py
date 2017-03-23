@@ -54,9 +54,8 @@ other_symptoms = [
     'ovulation_test_neg', 'ovulation_test_pos', 'pregnancy_test_neg', 'pregnancy_test_pos',  # test
 ]
 
+symptoms_of_interest_dict = {code: symptom for code, symptom in enumerate(symptoms_of_interest)}
 list_of_symptoms = symptoms_of_interest + other_symptoms
-ordered_symptoms = {s: i for i, s in enumerate(list_of_symptoms)}
-symptoms_of_interest_dict = {code:symptom for symptom, code in ordered_symptoms.items() if code < 16}
 training_columns = list_of_symptoms + ['day_in_cycle', 'absolute_day', 'period']
 
 
