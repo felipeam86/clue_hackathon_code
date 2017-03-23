@@ -27,22 +27,41 @@ def reformat(df_in,
              maxlen=MAXLEN,
              step_days=STEP_DAYS,
              max_sequences=N_TRAIN):
+    """
+    Turns raw input into pairs of Xs and ys to train the network
+    Xs correspond to sequences of maxlen days, and ys correspond to the maxlen+1 day
+    """
+    # Container for the Xs
     days_sequence = np.empty((max_sequences, maxlen, input_size), dtype=int)
+    # Container for the ys
     next_day = np.empty((max_sequences, output_size), dtype=int)
+    # The sequence of absolute days which we wil use to tell one user from another
     days = df_in.loc[:, "absolute_day"].reset_index(drop=True)
     df = df_in.reset_index(drop=True)
 
+    # Counter for the number of sequences created
     j = 0
+    # Last absolute day seen
     last_day = 0
+    # Current absolute day being processed
     day_i = 0
+    # Loop as long as we don't reach the end of the raw input
+    #   or as long as we have created less than the max number of sequences
     while (day_i < (df.shape[0] - maxlen)) & (j < max_sequences):
+        # Ensure that the beginning and end of the sequence correspond to the same user
+        #   i.e. the last_day is anterior to current dat
         if last_day < days.ix[day_i + maxlen]:
+            # Store the Xs
             days_sequence[j] = df.ix[day_i: day_i + maxlen - 1, :input_size]
-        next_day[j] = df.ix[day_i + maxlen, :output_size]
-        j += 1
+            # Store the y
+            next_day[j] = df.ix[day_i + maxlen, :output_size]
+        # move along the raw input by step_days
         day_i += step_days
+        # Update counters
         last_day = days.ix[day_i]
+        j += 1
 
+    # In case less sequence than the max have been created, shorted the outputs
     days_sequence = days_sequence[:j, :, :]
     next_day = next_day[:j, :]
 
