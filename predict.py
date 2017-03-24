@@ -27,9 +27,24 @@ def generate_prediction(history,
                         maxlen=MAXLEN,
                         input_size=INPUT_SIZE,
                         output_size=OUTPUT_SIZE):
-    """
-    Generates as many days of prediction as requested
-    Considers maxlen days of past history
+    """Generates as many days of prediction as requested
+
+    Parameters
+    ----------
+    history: np.array
+        Tensor of 3 dimensions: user/sequence of days (maxlen)/symptoms
+        History of m days (as per "maxlen" parameter) of symptoms for users
+    model: keras.model
+    days: int
+    maxlen: int
+    input_size: int
+    output_size: int
+
+    Returns
+    -------
+    generated: np.array
+        Tensor of 3 dimensions: user/sequence of days/symptoms
+        Predicted n days (as per "days" parameter) of symptoms of all users in input
     """
     print("Generating for expected cycle length %d" % days)
 
@@ -79,6 +94,26 @@ def get_submission(model, sequence, cycles_predict,
                    input_size=INPUT_SIZE,
                    output_size=OUTPUT_SIZE,
                    maxlen=MAXLEN):
+    """Split user by expected cycle length, and predict/format symptoms for corresponding number of days
+
+    Parameters
+    ----------
+    model: keras.model
+    sequence: np.array
+        Tensor of 3 dimensions: user/sequence of days (maxlen)/symptoms
+        History of m days (as per "maxlen" parameter) of symptoms for all users
+    cycles_predict: np.array
+        Contains expected cycle length for each user
+    input_size: int
+    output_size: int
+    maxlen: int
+
+    Returns
+    -------
+    submission: np.array
+        Tensor of 3 dimensions: user/sequence of days/symptoms
+        Predicted n days (as per "days" parameter) of symptoms of all users
+    """
     # Create empty data frame that will contain result
     submission = pd.DataFrame(columns=['user_id', 'day_in_cycle', 'symptom', 'probability'])
 
@@ -109,6 +144,23 @@ def format_prediction(prediction,
                       output_size,
                       women,
                       expected_cycle_length):
+    """Convert prediction to a format expected by the statice plateform
+
+    Parameters
+    ----------
+    prediction: np.array
+        Tensor of 3 dimensions: user/sequence of days (maxlen)/symptoms
+        Prediction of m days (as per "expected_cycle_length" parameter) of symptoms for all users
+    output_size: int
+    women: list
+        List of user ids for which the prediction is provided
+    expected_cycle_length: int
+
+    Returns
+    -------
+    output: np.array
+        Array of 2 dimensions: symptom per woman/probability
+    """
     print("Formatting for expected cycle length %d" % expected_cycle_length)
     # Create column with user_id
     user = pd.Series(list(np.repeat(women, expected_cycle_length)) * output_size, name="user_id")
