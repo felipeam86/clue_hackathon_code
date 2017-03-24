@@ -31,9 +31,33 @@ def reformat(df_in,
              maxlen=MAXLEN,
              step_days=STEP_DAYS,
              max_sequences=N_TRAIN):
-    """
-    Turns raw input into pairs of Xs and ys to train the network
+    """Turns raw input into pairs of Xs and ys to train the network
+
     Xs correspond to sequences of maxlen days, and ys correspond to the maxlen+1 day
+
+    Parameters
+    ----------
+    df_in: numpy.array
+    input_size: int
+        Number of input symptoms to take into account
+    output_size: int
+        Number of outputs symptoms to predict
+    maxlen: int
+        Number of days in the past that are required to generate next day prediction
+    step_days: int
+        Number of days to skip between two Xs
+    max_sequences: int
+        maximum number of sequences to generate for training. Ideally we would not limit it
+        but due to memory constraints, pushing it way beyond 300000 is difficult on a 16Gb machine
+
+    Returns
+    -------
+    days_sequence: np.array
+        Tensor of 3 dimensions: user/sequence of days (maxlen)/symptoms (input_size)
+        Xs: The symptom for the n first days for all users
+    next_day: np.array
+        Array of 2 dimensions: user/symptoms (output_size)
+        ys: The symptoms for the n+1 day for all users
     """
     # Container for the Xs
     days_sequence = np.empty((max_sequences, maxlen, input_size), dtype=int)
