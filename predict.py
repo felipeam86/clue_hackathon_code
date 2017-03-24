@@ -37,8 +37,11 @@ def generate_prediction(history,
     model: keras.model
     days: int
     maxlen: int
+        Number of days in the past that are required to generate next day prediction
     input_size: int
+        Number of input symptoms to take into account
     output_size: int
+        Number of outputs symptoms to predict
 
     Returns
     -------
