@@ -1,2 +1,2 @@
 data/*.csv
-data/*.pkl.gz
+staging/*.pkl.gz
