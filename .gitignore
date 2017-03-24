@@ -72,4 +72,4 @@ target/
 # Temporary files
 *~
 
-data/*.csv
+data/*
