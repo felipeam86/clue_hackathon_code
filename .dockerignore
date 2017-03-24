@@ -1,2 +1,4 @@
-data/*.csv
-staging/*.pkl.gz
+data/*
+staging/*
+notebooks/*
+*txt
