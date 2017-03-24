@@ -1,6 +1,4 @@
-
-<img src="the_simptoms.png" alt="the simptoms" width="200">
-
+ <p align="center"><img src="the_simptoms.png" width="400"></p>
 # Example submission for the hackathon
 
 This is an example submission in Python that you can use as reference/starting point to create your own submission.
