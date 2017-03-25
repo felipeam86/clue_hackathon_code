@@ -1,4 +1,4 @@
- <p align="center"><img src="the_simptoms.png" width="400"></p>
+ <p align="center"><img src="images/the_simptoms.png" width="400"></p>
 
 # Usage
 
@@ -25,13 +25,14 @@ This was observed for image recognition, image caption, speech recognition among
 ## Drawbacks of neural networks
 The main drawback of neural networks is the time it takes to train them. Covergence to an minima can be very time consuming,
 in particular for RNN which consist of many neural networks running in parallel, rapidely growing to millions of parameters to tune.
-This has been a big challenge in this competition given the amount of data to process and the timeout set to 2 hours.
+This has been a big challenge in this competition given the amount of data to process and the timeout set to 2 hours on the statice plateform.
 
-How solution was designed so that the NN can be trained locally and weights are reused without further training on the stative plateform.
+Our solution was designed so that the NN can be trained locally and weights are reused without further training on the stative plateform.
 This speeds up processing, but this also means that training is performed on synthetic data that doesn't necessarily match well the real data.
+As a result we observed big discrepancies between performance observed locally and on the statice plateform.
 
 Another drawback of NNs is the difficulty to interpret them. With millions of parameters and no or little human feature engineering,
-understanding the logic of how the NN learns and predicts can be nearly impossible. In this particular case it may not be a concern,
+understanding the logic of how the NN learns and predicts can be nearly impossible. In this particular case it may not be an issue,
 but with increasing concerns for transparency and new EU regulations soon to be effective, the need to explain clearly the
 algorithm decision tree may prevent the use of NNs
 
@@ -57,16 +58,29 @@ point it is better to stop the training. We setup the network so the NN weights 
 keeping training after reaching the overfit phase doesn't harm the model, but it is a pure waste of time.
 
 ## Performance
-On local machines the performance of RNN looked very promising.
-With the default parameters, the RNN took 21 minutes to train on a machine with 16GB RAM with GPU GTX 960M.
-The log loss on hold out set (validation) is 0.053 after 15 epochs, as show in the graph below.
+On local machines the performance of RNN looked very promising. We used a PC with 16Gb RAM and a GPU GTX 960M to pre-train the models.
+With the default parameters, the RNN took 21 minutes to train and we achieved a log loss on hold out set (validation)
+ of 0.053 after 15 epochs, as shown in the graph below.
+ <p align="center"><img src="images/lstm_1_layers_16_input_size_16_output_size_90_maxlen.png" width="400"></p>
 Using the same weights on the statice plateform the obtained log loss is XXX
 Trained on the statice plateform with the same parameters, we obtain a log loss of XXX
 
 # Next steps
-Use GPU box
+## Add additional variables
+Our solution didn't take into account several variables made available to us, in particular specifics about the user such as
+age, weight, country etc. These information are most probably meaningful and could help improve performance
 
-Add features
+Also our intuition is that adding an additional variable "last day of cycle" would greatly help the RNN to improve prediction
+on the first few days of the next cycle.
+
+Improve architecture, in particular dropout as recommended in https://arxiv.org/pdf/1409.2329.pdf
+Also stateful
+
+## Test the solution on a remote platefrom equipped with GPU
+Most of our attempt to train the RNN on the statice platefrom failed due to the the 2 hours timeout, whereas they were
+executing successfuly locally on a PC equipped with GPU. Having a remote environment running a GPU would allow remote training
+and would very likely lead to performances equivalent to those observed locally.
+
 
 # Lessons learned
 From the team
