@@ -39,7 +39,8 @@ algorithm decision tree may prevent the use of NNs
 ## Architecture
 We chose to explore two main architectures: 1 with 128 neurons and 2 layers 256 neurons each RNNs.
 
-<p align="center">Illustration of a multi input/single output lstm<img src="images/lstm.png" width="400"></p>
+<p align="center"><img src="images/lstm.png" width="150"></p>
+<p align="center">Illustration of a multi input/single output lstm</p>
 
 Our RNNs are trained with a history of n days (by default 90) describing symptoms experienced by users (the X), and the labels are
 the symptoms experiences by the same users on the n+1 day (the y)
