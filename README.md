@@ -4,7 +4,7 @@ This repository contains our contribution to the
 [Clue-WATTx hackathon](http://cluehackathon.wattx.io/)
 
 # 1. Usage
-## Dependencies
+## 1.1 Dependencies
 The code was developed with python 3.5 and the following libraries and
 respective versions :
     - pandas 0.19.2
@@ -13,7 +13,7 @@ respective versions :
     - numpy 1.12.0
     - joblib 0.10.3
 
-## Training
+## 1.2 Training
    First, you have to train the model using the train.py script.
 
    While
@@ -54,7 +54,7 @@ optional arguments:
   -debug                If True, use a reduced subset of the data.
 ```
 
-## Prediction
+## 1.3 Prediction
    After model training, the predictions are made with predict.py.
 
    It    automatically loads the pretrained weights assuming you use the
