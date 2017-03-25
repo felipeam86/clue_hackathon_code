@@ -7,11 +7,11 @@ This repository contains our contribution to the
 ## 1.1 Dependencies
 The code was developed with python 3.5 and the following libraries and
 respective versions :
-    - pandas 0.19.2
-    - keras 2.0.1
-    - tensorflow-gpu 1.0.1 (It can also work with non gpu version)
-    - numpy 1.12.0
-    - joblib 0.10.3
+- pandas 0.19.2
+- keras 2.0.1
+- tensorflow-gpu 1.0.1 (It can also work with non gpu version)
+- numpy 1.12.0
+- joblib 0.10.3
 
 ## 1.2 Training
    First, you have to train the model using the train.py script.
