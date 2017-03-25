@@ -39,6 +39,8 @@ algorithm decision tree may prevent the use of NNs
 ## Architecture
 We chose to explore two main architectures: 1 with 128 neurons and 2 layers 256 neurons each RNNs.
 
+<p align="center">Illustration of a multi input/single output lstm<img src="images/lstm.png" width="400"></p>
+
 Our RNNs are trained with a history of n days (by default 90) describing symptoms experienced by users (the X), and the labels are
 the symptoms experiences by the same users on the n+1 day (the y)
 
@@ -73,20 +75,47 @@ age, weight, country etc. These information are most probably meaningful and cou
 Also our intuition is that adding an additional variable "last day of cycle" would greatly help the RNN to improve prediction
 on the first few days of the next cycle.
 
-Improve architecture, in particular dropout as recommended in https://arxiv.org/pdf/1409.2329.pdf
-Also stateful
+## Improve the RNN architecture
+There are two obvious areas where the RNN can be improved.
+
+The first one is linked to the regularization technique. We used simple dropout of 50%, but it is know that for RNNs dropout
+should only be applied to non recurrent layers, as described in this [paper](https://arxiv.org/pdf/1409.2329.pdf)
+
+The second one is connected to statefulness of RNNs. Our RNN is stateless, however we are processing sequences which are related
+to each other, therefore at training time we could use statefulness to improve network.
 
 ## Test the solution on a remote platefrom equipped with GPU
 Most of our attempt to train the RNN on the statice platefrom failed due to the the 2 hours timeout, whereas they were
 executing successfuly locally on a PC equipped with GPU. Having a remote environment running a GPU would allow remote training
 and would very likely lead to performances equivalent to those observed locally.
 
-
 # Lessons learned
-From the team
+This competition was the first hackathon that all members of the team ever attended. It has been a lot of fun, a lot of effort
+and came with numerous learnings. Here are some of them
 
-On NNs
+## Neural networks
+We loved working with RNNs. They are state of the art and the way forward for many applications. Despite the lack of results on the
+statice plateform, the good results we obtained locally give us confidence that they are the right way to deal with the challenge
+proposed by clue.
 
-On statice
+We will keep learning about them and experimenting them in future assignements.
 
-On Clue
+## Statice plateform
+Working with the statice plateform has been one of our biggest challenge. The plateform being new, there are lots of adjustements
+that can be made, however our main recommendations are the following:
+- enable GPU instances for those using RNNs
+- enable better tracking/logging of errors to avoid to many back and forth between the developer and the plateform administrator
+- setup multiple plateforms with variable amount of data to enable quicker iterative process during the development phase that requires
+intensive testing
+
+Overall we were proud to pioneer the statice plateform that will undoubtly address important privacy concerns that might have holded
+many companies from sharing their data in competitions.
+
+## Clue data
+This document referred a lot to the technical approach and little to the data itself. This is in part because the approach we chose
+required little engineering of the data itself.
+
+However it is worth mentionning that being purely a team of males, all of us learnt a lot from the initial brief and the data itself.
+The breadth of symptoms experienced and reported by women surprised us and definitely give us a better understanding of women around us.
+
+Thank you Clue for collecting this data and using it for the benefit of all!
