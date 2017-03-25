@@ -16,8 +16,7 @@ respective versions :
 ## 1.2 Training
    First, you have to train the model using the train.py script.
 
-   While
-   training, the weights are automatically stored each time the
+   While training, the weights are automatically stored each time the
    validation loss decreases (in the /weights directory).
    The parameters by default train a simple
    LSTM model with  1 layer of 128 neurons over 15 epochs. It uses 100000 sequences
@@ -76,6 +75,12 @@ optional arguments:
   -model {1,2}          1 or 2 layers model
   -weights WEIGHTS      Where to store the weights after training
 ```
+
+## 1.4 Additional checks
+
+   Before starting the training or prediction phase, ensure all csv files are added
+   to the data/ directory. Due to privacy concerns these files have not been uploaded
+   with the source code.
 
 # 2. Preprocessing
 
