@@ -4,19 +4,25 @@ This repository contains our contribution to the
 [Clue-WATTx hackathon](http://cluehackathon.wattx.io/)
 
 # 1. Usage
-1. Dependencies: The code was developed with python 3.5 and the following libraries and
+## Dependencies
+The code was developed with python 3.5 and the following libraries and
 respective versions :
     - pandas 0.19.2
     - keras 2.0.1
-    - tensorflow-gpu 1.0.1 (It should also work with non gpu version)
+    - tensorflow-gpu 1.0.1 (It can also work with non gpu version)
     - numpy 1.12.0
     - joblib 0.10.3
 
-2. First, you have to train the model using the train.py script. While
+## Training
+   First, you have to train the model using the train.py script.
+
+   While
    training, the weights are automatically stored each time the
-   validation loss decreases. The parameters by default train a simple
-   LSTM model with  128 cells over 15 epochs. It uses 100000 sequences
+   validation loss decreases (in the /weights directory).
+   The parameters by default train a simple
+   LSTM model with  1 layer of 128 neurons over 15 epochs. It uses 100000 sequences
    for training and 50000 for testing. The input and output size is 16
+   (i.e. 16 symptoms in input and 16 in output)
    and only batches of 90 days in a row are used for training and
    predicting. The parameters can be tweaked from the command line
    interface :
@@ -48,9 +54,11 @@ optional arguments:
   -debug                If True, use a reduced subset of the data.
 ```
 
-3. After model training, the predictions are made with predict.py. It
-   automatically loads the pretrained weights. The model by default is
-   the same as the train script. The parameters can be tweaked from the
+## Prediction
+   After model training, the predictions are made with predict.py.
+
+   It    automatically loads the pretrained weights assuming you use the
+   exact same parameters as during training The parameters can be tweaked from the
    command line interface :
 
 ```bash
@@ -128,10 +136,15 @@ keeping training after reaching the overfit phase doesn't harm the model, but it
 ## 3.4 Performance
 On local machines the performance of RNN looked very promising. We used a PC with 16Gb RAM and a GPU GTX 960M to pre-train the models.
 With the default parameters, the RNN took 21 minutes to train and we achieved a log loss on hold out set (validation)
- of 0.053 after 15 epochs, as shown in the graph below.
+ of 0.0531 after 15 epochs, as shown in the graph below.
  <p align="center"><img src="images/lstm_1_layers_16_input_size_16_output_size_90_maxlen.png" width="400"></p>
-Using the same weights on the statice platform the obtained log loss is XXX
-Trained on the statice plateform with the same parameters, we obtain a log loss of XXX
+Using the same weights on the statice platform the obtained log loss is 0.0761
+
+Trained on the statice plateform with the same parameters, we obtain a log loss of 0.0748
+
+There may be several reasons why the performance on the remotely trained model is not as good as the performance on the synthetic data.
+The number one assumptions is that locally 100,000 sequences corresponds to a representative portion of the users, however remotely
+this may cover a smaller part of all users, therefore the parameter N_train should be increased to train on more samples.
 
 # 4. Next steps
 ## 4.1 Add additional variables
