@@ -23,7 +23,7 @@ respective versions :
 
 
 ```bash
-python train.py --help
+$ python train.py --help
 usage: train.py [-h] [-N_train N_TRAIN] [-N_test N_TEST] [-N_epochs N_EPOCHS]
                 [-batch_size BATCH_SIZE] [-input_size INPUT_SIZE]
                 [-output_size OUTPUT_SIZE] [-maxlen MAXLEN]
@@ -54,7 +54,7 @@ optional arguments:
    command line interface :
 
 ```bash
-python predict.py --help
+$ python predict.py --help
 usage: predict.py [-h] [-input_size INPUT_SIZE] [-output_size OUTPUT_SIZE]
                   [-maxlen MAXLEN] [-model {1,2}] [-weights WEIGHTS]
 
