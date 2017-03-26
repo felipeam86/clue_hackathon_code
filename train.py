@@ -105,13 +105,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
-    parser.add_argument('-N_train', default=N_TRAIN, type=int, help='Number of users for training dataset')
-    parser.add_argument('-N_test', default=N_TEST, type=int, help='Number of users for testing raining dataset')
+    parser.add_argument('-N_train', default=N_TRAIN, type=int, help='Number of sequences used for training.')
+    parser.add_argument('-N_test', default=N_TEST, type=int, help='Number of sequences used for testing.')
     parser.add_argument('-N_epochs', default=NB_EPOCH, type=int, help='Number of epochs')
     parser.add_argument('-batch_size', default=BATCH_SIZE, type=int, help='Batch size')
     parser.add_argument('-input_size', default=INPUT_SIZE, type=int, help='Input size')
     parser.add_argument('-output_size', default=OUTPUT_SIZE, type=int, help='Output size')
-    parser.add_argument('-maxlen', default=MAXLEN, type=int, help='maxlen')
+    parser.add_argument('-maxlen', default=MAXLEN, type=int, help='Max length of the sequence')
     parser.add_argument('-step_days', default=STEP_DAYS, type=int, help='STEP_DAYS')
     parser.add_argument('-model', default=MODEL, type=int, help="1 or 2 layers model", choices=[1, 2])
     parser.add_argument('-weights', default=None, type=str, help="Where to store the weights after training")

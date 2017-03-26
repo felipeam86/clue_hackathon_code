@@ -37,9 +37,9 @@ usage: train.py [-h] [-N_train N_TRAIN] [-N_test N_TEST] [-N_epochs N_EPOCHS]
 
 optional arguments:
   -h, --help            show this help message and exit
-  -N_train N_TRAIN      Number of users for training dataset (default: 100000)
-  -N_test N_TEST        Number of users for testing raining dataset (default:
-                        50000)
+  -N_train N_TRAIN      Number of sequences used for training. (default:
+                        100000)
+  -N_test N_TEST        Number of sequences used for testing. (default: 50000)
   -N_epochs N_EPOCHS    Number of epochs (default: 15)
   -batch_size BATCH_SIZE
                         Batch size (default: 256)
@@ -47,13 +47,14 @@ optional arguments:
                         Input size (default: 16)
   -output_size OUTPUT_SIZE
                         Output size (default: 16)
-  -maxlen MAXLEN        maxlen (default: 90)
+  -maxlen MAXLEN        Max length of the sequence (default: 90)
   -step_days STEP_DAYS  STEP_DAYS (default: 3)
   -model {1,2}          1 or 2 layers model (default: 1)
   -weights WEIGHTS      Where to store the weights after training (default:
                         None)
   -debug                If True, use a reduced subset of the data. (default:
                         False)
+
 
 ```
 
@@ -74,7 +75,7 @@ optional arguments:
                         Input size (default: 16)
   -output_size OUTPUT_SIZE
                         Output size (default: 16)
-  -maxlen MAXLEN        maxlen (default: 90)
+  -maxlen MAXLEN        Max length of the sequence (default: 90)
   -model {1,2}          1 or 2 layers model (default: 1)
   -weights WEIGHTS      Where to load pretrained weights (default: None)
 ```
