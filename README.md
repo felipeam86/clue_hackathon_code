@@ -4,19 +4,24 @@ This repository contains our contribution to the
 [Clue-WATTx hackathon](http://cluehackathon.wattx.io/)
 
 # 1. Usage
-1. Dependencies: The code was developed with python 3.5 and the following libraries and
+## 1.1 Dependencies
+The code was developed with python 3.5 and the following libraries and
 respective versions :
-    - pandas 0.19.2
-    - keras 2.0.1
-    - tensorflow-gpu 1.0.1 (It should also work with non gpu version)
-    - numpy 1.12.0
-    - joblib 0.10.3
+- pandas 0.19.2
+- keras 2.0.1
+- tensorflow-gpu 1.0.1 (It can also work with non gpu version)
+- numpy 1.12.0
+- joblib 0.10.3
 
-2. First, you have to train the model using the train.py script. While
-   training, the weights are automatically stored each time the
-   validation loss decreases. The parameters by default train a simple
-   LSTM model with  128 cells over 15 epochs. It uses 100000 sequences
+## 1.2 Training
+   First, you have to train the model using the train.py script.
+
+   While training, the weights are automatically stored each time the
+   validation loss decreases (in the /weights directory).
+   The parameters by default train a simple
+   LSTM model with  1 layer of 128 neurons over 15 epochs. It uses 100000 sequences
    for training and 50000 for testing. The input and output size is 16
+   (i.e. 16 symptoms in input and 16 in output)
    and only batches of 90 days in a row are used for training and
    predicting. The parameters can be tweaked from the command line
    interface :
@@ -48,9 +53,11 @@ optional arguments:
   -debug                If True, use a reduced subset of the data.
 ```
 
-3. After model training, the predictions are made with predict.py. It
-   automatically loads the pretrained weights. The model by default is
-   the same as the train script. The parameters can be tweaked from the
+## 1.3 Prediction
+   After model training, the predictions are made with predict.py.
+
+   It    automatically loads the pretrained weights assuming you use the
+   exact same parameters as during training The parameters can be tweaked from the
    command line interface :
 
 ```bash
@@ -68,6 +75,12 @@ optional arguments:
   -model {1,2}          1 or 2 layers model
   -weights WEIGHTS      Where to store the weights after training
 ```
+
+## 1.4 Additional checks
+
+   Before starting the training or prediction phase, ensure all csv files are added
+   to the data/ directory. Due to privacy concerns these files have not been uploaded
+   with the source code.
 
 # 2. Preprocessing
 
@@ -125,23 +138,35 @@ finally the validation loss increases while the training loss keeps decreasing. 
 point it is better to stop the training. We setup the network so the NN weights are saved only when the validation loss improves, so
 keeping training after reaching the overfit phase doesn't harm the model, but it is a pure waste of time.
 
-## 3.4 Performance
+# 4 Performance
 On local machines the performance of RNN looked very promising. We used a PC with 16Gb RAM and a GPU GTX 960M to pre-train the models.
 With the default parameters, the RNN took 21 minutes to train and we achieved a log loss on hold out set (validation)
- of 0.053 after 15 epochs, as shown in the graph below.
+ of 0.0531 after 15 epochs, as shown in the graph below.
  <p align="center"><img src="images/lstm_1_layers_16_input_size_16_output_size_90_maxlen.png" width="400"></p>
-Using the same weights on the statice platform the obtained log loss is XXX
-Trained on the statice plateform with the same parameters, we obtain a log loss of XXX
+Using the same weights on the statice platform the obtained log loss is 0.0761
 
-# 4. Next steps
-## 4.1 Add additional variables
+Trained on the statice plateform with the same parameters, we obtain a log loss of 0.0748
+
+Training phase can be tested in a more interactive manner using this notebook:
+[3.0-Train-LSTM-visualize-log-loss](https://github.com/felipeam86/clue_hackathon_code/blob/master/notebooks/3.0-Train-LSTM-visualize-log-loss.ipynb).
+The training/validation loss and accuracy evolution over epochs are displayed at the end of the training.
+
+There may be several reasons why the performance on the remotely trained model is not as good as the performance on the synthetic data.
+The number one assumptions is that locally 100,000 sequences corresponds to a representative portion of the users, however remotely
+this may cover a smaller part of all users, therefore the parameter N_train should be increased to train on more samples.
+
+It is also expected that increasing the sequence length from 90 to 120 days and reducing the step to 1 day intead of 3 will lead
+to better performances (if hardware allows).
+
+# 5. Next steps
+## 5.1 Add additional variables
 Our solution didn't take into account several variables made available to us, in particular specifics about the user such as
 age, weight, country etc. These information are most probably meaningful and could help improve performance
 
 Also our intuition is that adding an additional variable "last day of cycle" would greatly help the RNN to improve prediction
 on the first few days of the next cycle.
 
-## 4.2 Improve the RNN architecture
+## 5.2 Improve the RNN architecture
 There are two obvious areas where the RNN can be improved.
 
 The first one is linked to the regularization technique. We used simple dropout of 50%, but it is know that for RNNs dropout
@@ -150,23 +175,23 @@ should only be applied to non recurrent layers, as described in this [paper](htt
 The second one is connected to statefulness of RNNs. Our RNN is stateless, however we are processing sequences which are related
 to each other, therefore at training time we could use statefulness to improve network.
 
-## 4.3 Test the solution on a remote platform equipped with GPU
+## 5.3 Test the solution on a remote platform equipped with GPU
 Most of our attempt to train the RNN on the statice platform failed due to the the 2 hours timeout, whereas they were
 executing successfully locally on a PC equipped with GPU. Having a remote environment running a GPU would allow remote training
 and would very likely lead to performances equivalent to those observed locally.
 
-# 5. Lessons learned
+# 6. Lessons learned
 This competition was the first hackathon that all members of the team ever attended. It has been a lot of fun, a lot of effort
 and came with numerous teachings. Here are some of them
 
-## 5.1 Neural networks
+## 6.1 Neural networks
 We loved working with RNNs. They are state of the art and the way forward for many applications. Despite the lack of results on the
 statice platform, the good results we obtained locally give us confidence that they are the right way to deal with the challenge
 proposed by clue.
 
 We will keep learning about them and experimenting them in future assignments.
 
-## 5.2 Statice plateform
+## 6.2 Statice plateform
 Working with the statice platform has been one of our biggest challenge. The platform being new, there are lots of adjustments
 that can be made, however our main recommendations are the following:
 - enable GPU instances for those using RNNs
@@ -177,7 +202,7 @@ intensive testing
 Overall we were proud to pioneer the statice platform that will undoubtedly address important privacy concerns that might have held
 many companies from sharing their data in competitions.
 
-## 5.3 Clue data
+## 6.3 Clue data
 This document referred a lot to the technical approach and little to the data itself. This is in part because the approach we chose
 required little engineering of the data itself.
 
