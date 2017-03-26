@@ -213,7 +213,11 @@ def get_features(split=True, force=False):
         tracking_processed = process_tracking(tracking)
 
         # Merge cycles and tracking information
-        features = pd.merge(cycles_processed, tracking_processed, left_index=True, right_index=True, how='outer').fillna(0)
+        features = pd.merge(
+            tracking_processed,
+            cycles_processed,
+            left_index=True, right_index=True, how='outer'
+        ).fillna(0)
 
         # Find the first day the user started using the app
         features = pd.merge(
