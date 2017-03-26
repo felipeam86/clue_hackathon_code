@@ -183,13 +183,13 @@ def format_prediction(prediction,
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('-input_size', default=INPUT_SIZE, type=int, help='Input size')
     parser.add_argument('-output_size', default=OUTPUT_SIZE, type=int, help='Output size')
     parser.add_argument('-maxlen', default=MAXLEN, type=int, help='maxlen')
     parser.add_argument('-model', default=MODEL, type=int, help="1 or 2 layers model", choices=[1, 2])
-    parser.add_argument('-weights', default=None, type=str, help="Where to store the weights after training")
+    parser.add_argument('-weights', default=None, type=str, help="Where to load pretrained weights")
 
     args = parser.parse_args()
 

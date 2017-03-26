@@ -103,7 +103,7 @@ def reformat(df_in,
 if __name__ == '__main__':
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('-N_train', default=N_TRAIN, type=int, help='Number of users for training dataset')
     parser.add_argument('-N_test', default=N_TEST, type=int, help='Number of users for testing raining dataset')
