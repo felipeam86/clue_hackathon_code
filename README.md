@@ -85,7 +85,7 @@ optional arguments:
 # 2. Preprocessing
 
 The preprocessing steps are explained in detail on this notebook:
-[1.0-Prepare-training-data](/notebooks/1.0-Prepare-training-data.ipynb)
+[1.0-Prepare-training-data](https://github.com/felipeam86/clue_hackathon_code/blob/master/notebooks/1.0-Prepare-training-data.ipynb)
 
 # 3. Modeling
 Our solution leverages neural networks, more specifically recurrent neural networks (RNN) with long short term memory (LSTM).
@@ -147,8 +147,8 @@ Using the same weights on the statice platform the obtained log loss is 0.0761
 
 Trained on the statice plateform with the same parameters, we obtain a log loss of 0.0748
 
-Training phase can be tested in a more interactive manner using this workbook:
-[3.0-Train-LSTM-visualize-log-loss](/notebooks/3.0-Train-LSTM-visualize-log-loss.ipynb).
+Training phase can be tested in a more interactive manner using this notebook:
+[3.0-Train-LSTM-visualize-log-loss](https://github.com/felipeam86/clue_hackathon_code/blob/master/notebooks/3.0-Train-LSTM-visualize-log-loss.ipynb).
 The training/validation loss and accuracy evolution over epochs are displayed at the end of the training.
 
 There may be several reasons why the performance on the remotely trained model is not as good as the performance on the synthetic data.
